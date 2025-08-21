@@ -1,18 +1,9 @@
-import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
 
-export function GoogleLoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+export function GoogleLoginForm() {
   const handleSocialLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -20,8 +11,7 @@ export function GoogleLoginForm({
 
       if (error) throw error;
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-      setIsLoading(false);
+      toast.error(error instanceof Error ? error.message : "An error occurred");
     }
   };
 

@@ -11,6 +11,9 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import PublicRoute from "./components/layout/PublicRoute";
 import PrivateRoute from "./components/layout/PrivateRoute";
+import Products from "./pages/Products";
+import Team from "./pages/Team";
+import CreateProductPage from "./pages/CreateProductPage";
 function App() {
   const fetchUser = useAuthStore((state) => state.fetchUser);
   const initAuthListener = useAuthStore((state) => state.initAuthListener);
@@ -81,6 +84,30 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <PrivateRoute>
+              <Products />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/team"
+          element={
+            <PrivateRoute>
+              <Team />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <PrivateRoute>
+              <CreateProductPage />
             </PrivateRoute>
           }
         />
