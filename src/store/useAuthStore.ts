@@ -1,6 +1,5 @@
-import { supabase } from "@/lib/supabase";
 import { create } from "zustand";
-import type { User } from "@supabase/supabase-js";
+import type { User, Session } from "@supabase/supabase-js";
 
 interface Profile {
   first_name: string | null;
@@ -9,79 +8,59 @@ interface Profile {
   role: string | null;
 }
 
-export interface AppUser extends User {
+interface AuthState {
+  session: Session | null;
+  user: User | null;
   profile: Profile | null;
+  isAuthReady: boolean;
+  setSession: (session: Session | null) => void;
+  setProfile: (profile: Profile | null) => void;
+  setAuthReady: (ready: boolean) => void;
+  clearAuth: () => void;
+
+  isAuthenticated: boolean;
 }
 
-interface UserState {
-  user: AppUser | null;
-  loading: boolean;
-  setUser: (user: AppUser | null) => void;
-  fetchUser: () => Promise<void>;
-  initAuthListener: () => void;
-}
-
-export const useAuthStore = create<UserState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
+  session: null,
   user: null,
-  loading: true,
-
-  setUser: (user) => set({ user }),
-
-  fetchUser: async () => {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error || !data.user) {
-      console.error("Error fetching auth user:", error);
-      set({ user: null, loading: false });
-      return;
-    }
-
-    const authUser = data.user;
-
-    // fetch profile row
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("first_name, last_name, avatar_url, role")
-      .eq("id", authUser.id)
-      .single();
-
-    if (profileError) {
-      console.warn("No profile found, continuing with auth user only:", profileError.message);
-    }
-
-    const mergedUser: AppUser = {
-      ...authUser,
-      profile: profileData ?? null,
-    };
-
-    set({ user: mergedUser, loading: false });
+  profile: null,
+  isAuthReady: false,
+  get isAuthenticated() {
+    return !!get().session;
   },
 
-  initAuthListener: () => {
-    const { data: subscription } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (!session?.user) {
-          set({ user: null });
-          return;
-        }
-
-        const authUser = session.user;
-
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("first_name, last_name, avatar_url, role")
-          .eq("id", authUser.id)
-          .single();
-
-        const mergedUser: AppUser = {
-          ...authUser,
-          profile: profileData ?? null,
-        };
-
-        set({ user: mergedUser });
-      }
-    );
-
-    return () => subscription.subscription.unsubscribe();
+  setSession: (session) => {
+    const currentSession = get().session;
+    // Only update if session actually changed
+    if (currentSession?.access_token !== session?.access_token) {
+      set({
+        session,
+        user: session?.user ?? null,
+      });
+    }
   },
+
+  setProfile: (profile) => {
+    const currentProfile = get().profile;
+    // Only update if profile actually changed
+    if (JSON.stringify(currentProfile) !== JSON.stringify(profile)) {
+      set({ profile });
+    }
+  },
+
+  setAuthReady: (ready) => {
+    const currentReady = get().isAuthReady;
+    if (currentReady !== ready) {
+      set({ isAuthReady: ready });
+    }
+  },
+
+  clearAuth: () =>
+    set({
+      session: null,
+      user: null,
+      profile: null,
+      isAuthReady: true,
+    }),
 }));

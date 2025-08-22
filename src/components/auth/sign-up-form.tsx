@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { GoogleLoginForm } from "./google-login";
-import { createProfile } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
 
 export function SignUpForm({
@@ -25,8 +24,6 @@ export function SignUpForm({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const navigate = useNavigate();
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,8 +41,7 @@ export function SignUpForm({
         password,
       });
       if (error) throw error;
-
-      navigate("/set-profile");
+      navigate("/");
       setSuccess(true);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -80,28 +76,6 @@ export function SignUpForm({
           <CardContent>
             <form onSubmit={handleSignUp}>
               <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="name"
-                    required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="surname">Surname</Label>
-                  <Input
-                    id="surname"
-                    type="text"
-                    placeholder="surname"
-                    required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
