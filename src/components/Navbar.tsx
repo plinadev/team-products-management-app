@@ -15,7 +15,7 @@ function Navbar() {
     <div className="flex justify-between items-center">
       <div className="flex items-center">
         <img src={logo} alt="lightning" width={50} />
-        <p className="text-2xl font-bold text-amber-800">COMPANY NAME</p>
+        <p className="text-2xl font-bold text-yellow-700">COMPANY NAME</p>
       </div>
       <ul className="flex gap-6  text-stone-400 items-center">
         {menuItems.map(({ title, to }, idx) => {
@@ -25,8 +25,8 @@ function Navbar() {
               key={idx}
               className={`p-3 rounded-lg transition-colors duration-200 cursor-pointer ${
                 isActive
-                  ? "text-amber-700 font-semibold"
-                  : "hover:bg-stone-200 hover:text-amber-700"
+                  ? "text-yellow-700 font-semibold"
+                  : "hover:bg-stone-200 hover:text-yellow-700"
               }`}
             >
               <Link to={to}>{title.toLocaleUpperCase()}</Link>

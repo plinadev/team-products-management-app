@@ -10,6 +10,9 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+  if (!user.profile) {
+    return <Navigate to="/set-name" replace />;
+  }
   return <Layout>{children}</Layout>;
 }
 
