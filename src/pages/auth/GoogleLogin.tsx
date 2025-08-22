@@ -1,5 +1,5 @@
-import AuthLayout from "@/components/custom/AuthLayout";
-import { GoogleLoginForm } from "@/components/google-login";
+import AuthLayout from "@/components/layout/AuthLayout";
+import { GoogleLoginForm } from "@/components/auth/google-login";
 
 function GoogleLogin() {
   return (

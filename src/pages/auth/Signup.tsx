@@ -1,11 +1,10 @@
-import AuthLayout from "@/components/custom/AuthLayout";
-import { SignUpForm } from "@/components/sign-up-form";
+import AuthLayout from "@/components/layout/AuthLayout";
+import { SignUpForm } from "@/components/auth/sign-up-form";
 
 function Signup() {
   return (
     <AuthLayout>
       <SignUpForm />
-
     </AuthLayout>
   );
 }
