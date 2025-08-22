@@ -4,6 +4,7 @@ export function GoogleLoginForm() {
   const handleSocialLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      //TODO SET CORRECT URL
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
       });

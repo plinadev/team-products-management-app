@@ -14,26 +14,37 @@ import { Label } from "@/components/ui/label";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function SetProfile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+  const setProfile = useAuthStore((state) => state.setProfile);
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const result = await createProfile({
         first_name: firstName,
         last_name: lastName,
       });
+
       if (result.success) {
+        setProfile(result.profile);
+
         toast.success("Profile created successfully");
-        // navigate("/set-seam");
-        navigate("/");
+        navigate("/"); 
       }
     } catch (err: any) {
+      console.error(err);
       toast.error("An error occurred while setting up profile");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +68,7 @@ function SetProfile() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    disabled={loading}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -68,10 +80,15 @@ function SetProfile() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    disabled={loading}
                   />
                 </div>
-                <Button type="submit" className="w-full cursor-pointer">
-                  Continue
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? "Saving..." : "Continue"}
                 </Button>
               </div>
             </form>

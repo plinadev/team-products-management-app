@@ -1,8 +1,9 @@
-import { useAuthStore } from "@/store/useAuthStore";
+
 
 function Dashboard() {
-  const user = useAuthStore((state) => state.user);
-  return <div>{user?.email}</div>;
+  // const user = useAuthStore((state) => state.user);
+
+  return <div>kjwden;wkjden</div>;
 }
 
 export default Dashboard;
