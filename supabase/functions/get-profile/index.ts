@@ -1,6 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createSupabaseClient } from "../_shared/supabaseClient.ts";
 import { handleCors } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/requireUser.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = handleCors(req);
@@ -13,23 +14,14 @@ Deno.serve(async (req) => {
   try {
     const supabase = createSupabaseClient(req);
 
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const auth = await requireUser(supabase, corsHeaders);
+     if ("response" in auth) return auth.response; 
+     const { user } = auth
 
     // Fetch profile row
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
-      .select("first_name, last_name, avatar_url, role")
+      .select("first_name, last_name, avatar_url, role, team_id")
       .eq("id", user.id)
       .maybeSingle();
 

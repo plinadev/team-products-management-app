@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import { Navigate, useLocation } from "react-router-dom";
 import Layout from "./Layout";
 interface PrivateRouteProps {
@@ -7,7 +7,6 @@ interface PrivateRouteProps {
 function PrivateRoute({ children }: PrivateRouteProps) {
   const { user, profile } = useAuthStore();
   const { pathname } = useLocation();
-
 
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -18,7 +17,13 @@ function PrivateRoute({ children }: PrivateRouteProps) {
     }
     return <>{children}</>;
   }
-  if (pathname === "/set-profile") {
+  if (!profile.team_id) {
+    if (pathname !== "/create-or-join-team") {
+      return <Navigate to="/create-or-join-team" replace />;
+    }
+    return <>{children}</>;
+  }
+  if (pathname === "/set-profile" || pathname === "/create-or-join-team") {
     return <Navigate to="/" replace />;
   }
 

@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import { getProfile } from "@/services/authService";
-import { useLoadingStore } from "./useLoadingState";
+import { useLoadingStore } from "../loading/useLoadingState";
+import { usePresenceStore } from "../presence/usePresenceStore";
 
 function AuthListener() {
   const { setSession, setProfile, clearAuth, setAuthReady } = useAuthStore();
   const { setLoading } = useLoadingStore();
-
+  const { joinTeamPresence, leaveTeamPresence } = usePresenceStore();
   useEffect(() => {
     const handleSession = async (session: any) => {
       if (!session) {
@@ -22,7 +23,20 @@ function AuthListener() {
       setLoading(true);
       try {
         const userData = await getProfile();
-        setProfile(userData?.user?.profile ?? null);
+        const profileData = userData?.user?.profile ?? null;
+        setProfile(profileData);
+
+        if (session.user && profileData?.team_id) {
+          joinTeamPresence(profileData.team_id, {
+            id: session.user.id,
+            first_name: profileData.first_name,
+            last_name: profileData.last_name,
+            role: profileData.role,
+            email: session.user.email,
+          });
+        } else {
+          leaveTeamPresence();
+        }
       } catch (err) {
         console.error("Failed to fetch profile:", err);
         setProfile(null);
@@ -59,7 +73,7 @@ function AuthListener() {
     return () => {
       subscription.subscription.unsubscribe();
     };
-  }, [setSession, setProfile, clearAuth, setAuthReady, setLoading]);
+  }, [setSession, setProfile, clearAuth, setAuthReady, setLoading, joinTeamPresence, leaveTeamPresence]);
 
   return null;
 }
