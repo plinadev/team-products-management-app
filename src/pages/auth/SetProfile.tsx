@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import AuthLayout from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 
 function SetProfile() {
   const [firstName, setFirstName] = useState("");
@@ -38,7 +38,7 @@ function SetProfile() {
         setProfile(result.profile);
 
         toast.success("Profile created successfully");
-        navigate("/"); 
+        navigate("/");
       }
     } catch (err: any) {
       console.error(err);

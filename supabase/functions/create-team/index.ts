@@ -2,6 +2,28 @@ import { createSupabaseClient } from "../_shared/supabaseClient.ts";
 import { handleCors } from "../_shared/cors.ts";
 import { requireUser } from "../_shared/requireUser.ts";
 
+function generateInviteCode(length = 6) {
+  return Math.random().toString(36).substring(2, 2 + length);
+}
+
+
+async function generateUniqueCode(supabase: any) {
+  let code: string;
+  let exists = true;
+
+  while (exists) {
+    code = generateInviteCode();
+    const { data } = await supabase
+      .from("teams")
+      .select("id")
+      .eq("invite_code", code)
+      .single();
+
+    if (!data) exists = false;
+  }
+
+  return code!;
+}
 
 Deno.serve(async (req) => {
   const corsHeaders = handleCors(req);
@@ -12,13 +34,11 @@ Deno.serve(async (req) => {
 
   try {
     const supabase = createSupabaseClient(req);
-
-   const auth = await requireUser(supabase, corsHeaders);
-    if ("response" in auth) return auth.response; 
-    const { user } = auth
+    const auth = await requireUser(supabase, corsHeaders);
+    if ("response" in auth) return auth.response;
+    const { user } = auth;
 
     const { name } = await req.json();
-
     if (!name) {
       return new Response(JSON.stringify({ error: "Team name required" }), {
         status: 400,
@@ -26,10 +46,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Generate invite code
-    const inviteCode = Math.random().toString(36).substring(2, 8);
+   
+    const inviteCode = await generateUniqueCode(supabase);
 
-    // Create the team
+
     const { data: team, error: teamError } = await supabase
       .from("teams")
       .insert({
@@ -42,12 +62,10 @@ Deno.serve(async (req) => {
 
     if (teamError) throw teamError;
 
-    // Link user’s profile to this team
+
     const { error: profileError } = await supabase
       .from("profiles")
-      .update({ team_id: team.id,
-        role: "admin"
-       })
+      .update({ team_id: team.id, role: "admin" })
       .eq("id", user.id);
 
     if (profileError) throw profileError;
@@ -63,4 +81,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-

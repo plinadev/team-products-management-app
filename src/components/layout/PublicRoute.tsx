@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import { Navigate } from "react-router-dom";
 
 interface PublicRouteProps {

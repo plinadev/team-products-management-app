@@ -10,20 +10,30 @@ import { Toaster } from "react-hot-toast";
 import PublicRoute from "./components/layout/PublicRoute";
 import PrivateRoute from "./components/layout/PrivateRoute";
 import Products from "./pages/Products";
-import Team from "./pages/Team";
+import Team from "./pages/team/Team";
 import CreateProductPage from "./pages/CreateProductPage";
 import AppLoader from "./components/Loader";
-import AuthListener from "./store/AuthListener";
-import { useLoadingStore } from "./store/useLoadingState";
-import { useAuthStore } from "./store/useAuthStore";
+import AuthListener from "./store/auth/AuthListener";
+import { useLoadingStore } from "./store/loading/useLoadingState";
+import { useAuthStore } from "./store/auth/useAuthStore";
 import CreateOrJoinTeam from "./pages/team/CreateOrJoinTeam";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+    },
+  },
+});
 function App() {
   const loading = useLoadingStore((state) => state.isLoading);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const shouldShowLoader = !isAuthReady || loading;
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
       <AuthListener />
       {!shouldShowLoader ? (
         <BrowserRouter>
@@ -123,7 +133,7 @@ function App() {
       ) : (
         <AppLoader />
       )}
-    </>
+    </QueryClientProvider>
   );
 }
 

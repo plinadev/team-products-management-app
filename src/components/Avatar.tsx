@@ -9,14 +9,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/lib/supabase";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Badge } from "./ui/badge";
 
 function Avatar() {
   const profile = useAuthStore((state) => state.profile);
+  const firstLetter = profile?.first_name![0];
   const user = useAuthStore((state) => state.user);
-  const avatarUrl = profile?.avatar_url;
   const clearAuth = useAuthStore((state) => state.clearAuth);
   const navigate = useNavigate();
 
@@ -34,12 +35,19 @@ function Avatar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <img
-          src={avatarUrl ?? placeholder}
-          alt="profile picture"
-          width={55}
-          className="cursor-pointer"
-        />
+        {!firstLetter ? (
+          <img
+            src={placeholder}
+            alt="profile picture"
+            width={55}
+            className="cursor-pointer"
+          />
+        ) : (
+          <div className="relative w-16 h-16 rounded-full bg-[#BE4E3A] flex items-center justify-center border border-gray-200">
+            <p className="text-3xl text-[#F8E4CC]">{firstLetter}</p>
+            <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-600 border-2 border-white rounded-full" />
+          </div>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-60" align="end">
         <DropdownMenuLabel className="font-bold text-amber-800 text-lg">
@@ -48,6 +56,7 @@ function Avatar() {
 
         <DropdownMenuLabel className="font-normal">
           {profile?.first_name} {profile?.last_name}
+          <Badge className="bg-emerald-600 ml-2">Online</Badge>
         </DropdownMenuLabel>
         <DropdownMenuLabel className="font-normal">
           {user?.email}
