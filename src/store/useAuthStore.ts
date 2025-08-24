@@ -6,6 +6,7 @@ interface Profile {
   last_name: string | null;
   avatar_url: string | null;
   role: string | null;
+  team_id: string | null;
 }
 
 interface AuthState {

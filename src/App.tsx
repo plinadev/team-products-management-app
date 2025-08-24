@@ -16,12 +16,12 @@ import AppLoader from "./components/Loader";
 import AuthListener from "./store/AuthListener";
 import { useLoadingStore } from "./store/useLoadingState";
 import { useAuthStore } from "./store/useAuthStore";
+import CreateOrJoinTeam from "./pages/team/CreateOrJoinTeam";
 
 function App() {
   const loading = useLoadingStore((state) => state.isLoading);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const shouldShowLoader = !isAuthReady || loading;
-
   return (
     <>
       <AuthListener />
@@ -77,6 +77,15 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/create-or-join-team"
+              element={
+                <PrivateRoute>
+                  <CreateOrJoinTeam />
+                </PrivateRoute>
+              }
+            />
+
             <Route
               path="/"
               element={
