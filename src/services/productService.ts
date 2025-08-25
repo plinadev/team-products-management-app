@@ -12,6 +12,10 @@ export interface UpdateProductInput {
   description?: string;
   image_url?: string | null;
 }
+export interface UpdateProductStatusInput {
+  id: string;
+  status: "active" | "deleted";
+}
 export const createProduct = async (payload: CreateProductInput) => {
   try {
     const response = await apiClient.post("/create-product", payload);
@@ -45,7 +49,23 @@ export const updateProduct = async (payload: UpdateProductInput) => {
     const response = await apiClient.post("/update-product", payload);
     return response.data.product as Product;
   } catch (error: any) {
-    console.error("Failed to create product:", {
+    console.error("Failed to update product:", {
+      message: error?.message,
+      status: error?.response?.status,
+      details: error?.response?.data,
+    });
+    throw error;
+  }
+};
+
+export const updateProductStatus = async (
+  payload: UpdateProductStatusInput
+) => {
+  try {
+    const response = await apiClient.post("/update-product-status", payload);
+    return response.data.product as Product;
+  } catch (error: any) {
+    console.error("Failed to update product status:", {
       message: error?.message,
       status: error?.response?.status,
       details: error?.response?.data,

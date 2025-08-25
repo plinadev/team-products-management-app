@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,17 +7,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, X } from "lucide-react";
 import { useCreateProduct } from "@/hooks/products/useCreateProduct";
 import uploadImageToStore from "@/utils/uploadImageToStore";
+interface FormData {
+  title: string;
+  description: string;
+  image: File | null;
+}
 
 function CreateProductPage() {
   const { createProduct, isCreating } = useCreateProduct();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
     image: null,
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -25,8 +32,8 @@ function CreateProductPage() {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setFormData((prev) => ({
         ...prev,

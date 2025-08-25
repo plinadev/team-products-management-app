@@ -24,21 +24,14 @@ import productPlaceholder from "@/assets/product-placeholder.svg";
 import { useUpdateProduct } from "@/hooks/products/useUpdateProduct";
 import uploadImageToStore from "@/utils/uploadImageToStore";
 import { deleteImageFromStore } from "@/utils/deleteImageFromStorage";
+import { useUpdateProductStatus } from "@/hooks/products/useUpdateProductStatus";
 
-function useUpdateProductStatus() {
-  return {
-    updateStatus: (productId, status) => {
-      console.log(`Updating product ${productId} status to:`, status);
-    },
-    isUpdating: false,
-  };
-}
+type ProductStatus = "draft" | "active" | "deleted";
 
 function Product() {
   const { product, isFetching, error } = useProduct();
   const { updateProduct, isUpdating } = useUpdateProduct();
-  const { updateStatus, isUpdating: isStatusUpdating } =
-    useUpdateProductStatus();
+  const { updateProductStatus, isUpdatingStatus } = useUpdateProductStatus();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
@@ -115,8 +108,8 @@ function Product() {
     });
   };
 
-  const handleStatusUpdate = (newStatus: "draft" | "active" | "deleted") => {
-    if (product) updateStatus(product.id, newStatus);
+  const handleStatusUpdate = (newStatus: "active" | "deleted") => {
+    if (product) updateProductStatus({ id: product.id, status: newStatus });
   };
 
   if (isFetching) return <ProductSkeleton />;
@@ -130,7 +123,8 @@ function Product() {
               <AlertCircle className="h-5 w-5" />
               <span>
                 Error loading product:{" "}
-                {error?.response?.data?.error || "Something went wrong"}
+                {(error as any)?.response?.data?.error ||
+                  "Something went wrong"}
               </span>
             </div>
           </CardContent>
@@ -343,8 +337,10 @@ function Product() {
               {statusTransitions.map(({ status, label, icon: Icon }) => (
                 <Button
                   key={status}
-                  onClick={() => handleStatusUpdate(status)}
-                  disabled={isStatusUpdating}
+                  onClick={() =>
+                    handleStatusUpdate(status as "active" | "deleted")
+                  }
+                  disabled={isUpdatingStatus}
                   variant={status === "deleted" ? "destructive" : "default"}
                   size="sm"
                   className="cursor-pointer"
@@ -399,7 +395,7 @@ function DateItem({ label, date }: { label: string; date: string }) {
   );
 }
 
-const getStatusBadgeVariant = (status: "draft" | "active" | "deleted") => {
+const getStatusBadgeVariant = (status: ProductStatus) => {
   switch (status) {
     case "draft":
       return "secondary";
@@ -412,7 +408,7 @@ const getStatusBadgeVariant = (status: "draft" | "active" | "deleted") => {
   }
 };
 
-const getStatusIcon = (status: "draft" | "active" | "deleted") => {
+const getStatusIcon = (status: ProductStatus) => {
   switch (status) {
     case "draft":
       return <FileText className="h-3 w-3" />;
@@ -425,9 +421,7 @@ const getStatusIcon = (status: "draft" | "active" | "deleted") => {
   }
 };
 
-const getAvailableStatusTransitions = (
-  current: "draft" | "active" | "deleted"
-) => {
+const getAvailableStatusTransitions = (current: ProductStatus) => {
   switch (current) {
     case "draft":
       return [
