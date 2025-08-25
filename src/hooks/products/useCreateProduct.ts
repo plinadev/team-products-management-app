@@ -8,9 +8,10 @@ export const useCreateProduct = () => {
 
   const { mutate: createProduct, isPending: isCreating } = useMutation({
     mutationFn: createProductApi,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const createdProductId = response.product.id;
       toast.success("Product was successfully created!");
-      navigate(`/products`);
+      navigate(`/products/${createdProductId}`);
     },
     onError: () => {
       toast.error(

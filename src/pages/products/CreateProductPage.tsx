@@ -52,7 +52,7 @@ function CreateProductPage() {
   };
 
   const handleSubmit = async () => {
-    let imageUrl: string = "";
+    let imageUrl: string | null = null;
 
     if (formData.image) {
       imageUrl = await uploadImageToStore(formData.image);

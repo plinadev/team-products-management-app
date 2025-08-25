@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
     if ("response" in auth) return auth.response;
     const { user } = auth;
 
-    const { id } = await req.json();
+    const { id, title, description, image_url } = await req.json();
     if (!id) {
       return new Response(JSON.stringify({ error: "Product ID is required" }), {
         status: 400,
@@ -27,20 +27,16 @@ Deno.serve(async (req) => {
 
     const { data: product, error } = await supabase
       .from("products")
-      .select(
-        `
-        id,
-        title,
-        description,
-        image_url,
-        status,
-        created_at,
-        updated_at,
-        author:profiles(id, first_name, last_name, role)
-      `
-      )
+      .update({
+        ...(title && { title }),
+        ...(description && { description }),
+        ...(image_url && { image_url }),
+      })
       .eq("id", id)
-      .maybeSingle();
+      .select(
+        "id,title, description, image_url,status, created_at, updated_at, author:profiles(id, first_name, last_name, role)"
+      )
+      .single();
 
     if (error) throw error;
     if (!product) {

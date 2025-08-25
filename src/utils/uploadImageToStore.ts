@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default async function uploadImageToStore(imageFile: File) {
-  const filePath = `products/${Date.now()}_${imageFile.name}`;
+  const filePath = `${Date.now()}_${imageFile.name}`;
   let imageUrl: string | null = null;
 
   const { error: uploadError } = await supabase.storage
