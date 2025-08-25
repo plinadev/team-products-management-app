@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import Avatar from "./Avatar";
-import { useTeam } from "@/hooks/useTeam";
+import { useTeam } from "@/hooks/team/useTeam";
 function Navbar() {
   const { pathname } = useLocation();
   const { team, isFetching } = useTeam();

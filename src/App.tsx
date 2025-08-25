@@ -9,9 +9,9 @@ import SetProfile from "./pages/auth/SetProfile";
 import { Toaster } from "react-hot-toast";
 import PublicRoute from "./components/layout/PublicRoute";
 import PrivateRoute from "./components/layout/PrivateRoute";
-import Products from "./pages/Products";
+import Products from "./pages/products/Products";
 import Team from "./pages/team/Team";
-import CreateProductPage from "./pages/CreateProductPage";
+import CreateProductPage from "./pages/products/CreateProductPage";
 import AppLoader from "./components/Loader";
 import AuthListener from "./store/auth/AuthListener";
 import { useLoadingStore } from "./store/loading/useLoadingState";
@@ -19,6 +19,7 @@ import { useAuthStore } from "./store/auth/useAuthStore";
 import CreateOrJoinTeam from "./pages/team/CreateOrJoinTeam";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Product from "./pages/products/Product";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -109,6 +110,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Products />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/products/:productId"
+              element={
+                <PrivateRoute>
+                  <Product />
                 </PrivateRoute>
               }
             />

@@ -6,7 +6,6 @@ import { requireUser } from "../_shared/requireUser.ts";
 Deno.serve(async (req) => {
   const corsHeaders = handleCors(req);
 
-  // Preflight handling
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -18,7 +17,6 @@ Deno.serve(async (req) => {
      if ("response" in auth) return auth.response; 
      const { user } = auth
 
-    // Fetch profile row
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
       .select("first_name, last_name, avatar_url, role, team_id")
@@ -37,7 +35,6 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    // Merge auth user + profile
     const mergedUser = { ...user, profile: profileData };
 
     return new Response(JSON.stringify({ user: mergedUser }), {
