@@ -1,5 +1,5 @@
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
-import { useTeam } from "@/hooks/useTeam";
+import { useTeam } from "@/hooks/team/useTeam";
 import { usePresenceStore } from "@/store/presence/usePresenceStore";
 import { useState } from "react";
 
@@ -35,7 +35,7 @@ function Dashboard() {
   );
 
   return (
-    <div className="p-6 space-y-6 w-[60%] md:w-[90%] flex flex-col justify-self-center">
+    <div className="p-6 space-y-6 lg:w-[60%] w-[90%] flex flex-col justify-self-center">
       {/* Team Invite Code */}
       <div className="rounded-xl p-4 flex items-center justify-between border-3 border-dashed border-amber-600">
         <div>

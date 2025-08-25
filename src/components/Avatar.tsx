@@ -43,7 +43,7 @@ function Avatar() {
             className="cursor-pointer"
           />
         ) : (
-          <div className="relative w-16 h-16 rounded-full bg-[#BE4E3A] flex items-center justify-center border border-gray-200">
+          <div className="relative cursor-pointer w-16 h-16 rounded-full bg-[#BE4E3A] flex items-center justify-center border border-gray-200">
             <p className="text-3xl text-[#F8E4CC]">{firstLetter}</p>
             <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-600 border-2 border-white rounded-full" />
           </div>
