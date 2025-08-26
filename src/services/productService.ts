@@ -1,21 +1,13 @@
 import apiClient from "@/lib/apiClient";
-import type { Product } from "@/types/product.type";
+import type {
+  CreateProductInput,
+  ListProductsParams,
+  ListProductsResponse,
+  Product,
+  UpdateProductInput,
+  UpdateProductStatusInput,
+} from "@/types/product.type";
 
-export interface CreateProductInput {
-  title: string;
-  description?: string | null;
-  image_url?: string | null;
-}
-export interface UpdateProductInput {
-  id: string;
-  title?: string;
-  description?: string;
-  image_url?: string | null;
-}
-export interface UpdateProductStatusInput {
-  id: string;
-  status: "active" | "deleted";
-}
 export const createProduct = async (payload: CreateProductInput) => {
   try {
     const response = await apiClient.post("/create-product", payload);
@@ -66,6 +58,25 @@ export const updateProductStatus = async (
     return response.data.product as Product;
   } catch (error: any) {
     console.error("Failed to update product status:", {
+      message: error?.message,
+      status: error?.response?.status,
+      details: error?.response?.data,
+    });
+    throw error;
+  }
+};
+
+export const listProducts = async (params: ListProductsParams = {}) => {
+  try {
+    const response = await apiClient.get<ListProductsResponse>(
+      "/list-products",
+      {
+        params,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch products:", {
       message: error?.message,
       status: error?.response?.status,
       details: error?.response?.data,
