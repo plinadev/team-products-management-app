@@ -5,7 +5,7 @@ export type Product = {
   title: string;
   description: string;
   image_url: string;
-  status: "draft" | "active" | "deleted";
+  status: ProductStatus;
   created_at: string;
   updated_at: string;
   author: Member;
@@ -43,3 +43,4 @@ export interface ListProductsResponse {
   page: number;
   pageSize: number;
 }
+export type ProductStatus = "draft" | "active" | "deleted";

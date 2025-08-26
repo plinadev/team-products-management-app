@@ -18,9 +18,6 @@ import {
   ChevronRight,
   Calendar,
   Eye,
-  CheckCircle,
-  FileText,
-  Trash2,
   X,
 } from "lucide-react";
 import { useProducts } from "@/hooks/products/useProducts";
@@ -29,6 +26,8 @@ import productPlaceholder from "@/assets/product-placeholder.svg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { Product } from "@/types/product.type";
 import { useTeam } from "@/hooks/team/useTeam";
+import getStatusBadgeVariant from "@/utils/getStatusBadgeVariant";
+import getStatusIcon from "@/utils/getStatusIcon";
 
 function Products() {
   const { products, total, page, pageSize, isFetching } = useProducts();
@@ -93,33 +92,7 @@ function Products() {
     setSearchParams(params);
   };
 
-  const getStatusBadgeVariant = (status) => {
-    switch (status) {
-      case "draft":
-        return "secondary";
-      case "active":
-        return "default";
-      case "deleted":
-        return "destructive";
-      default:
-        return "secondary";
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "draft":
-        return <FileText className="h-3 w-3" />;
-      case "active":
-        return <CheckCircle className="h-3 w-3" />;
-      case "deleted":
-        return <Trash2 className="h-3 w-3" />;
-      default:
-        return <FileText className="h-3 w-3" />;
-    }
-  };
-
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -150,7 +123,6 @@ function Products() {
         </div>
       </div>
 
-      {/* Filters Card */}
       <Card>
         <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
@@ -167,7 +139,6 @@ function Products() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Search Bar */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
@@ -183,9 +154,7 @@ function Products() {
             />
           </div>
 
-          {/* Filter Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Status Filter */}
             <div className="space-y-2">
               <Label>Status</Label>
               <Select
@@ -207,7 +176,6 @@ function Products() {
               </Select>
             </div>
 
-            {/* Author Filter */}
             <div className="space-y-2">
               <Label>Created By</Label>
               <Select
@@ -231,7 +199,6 @@ function Products() {
               </Select>
             </div>
 
-            {/* Date From Filter */}
             <div className="space-y-2">
               <Label>Created From</Label>
               <Input
@@ -244,7 +211,6 @@ function Products() {
               />
             </div>
 
-            {/* Date To Filter */}
             <div className="space-y-2">
               <Label>Created To</Label>
               <Input
@@ -263,7 +229,6 @@ function Products() {
         <ProductsSkeleton />
       ) : (
         <>
-          {/* Products Table */}
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -385,7 +350,6 @@ function Products() {
             </CardContent>
           </Card>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">

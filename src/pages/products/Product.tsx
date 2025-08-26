@@ -12,7 +12,6 @@ import {
   Calendar,
   User,
   CheckCircle,
-  FileText,
   Trash2,
   AlertCircle,
   Camera,
@@ -25,8 +24,9 @@ import { useUpdateProduct } from "@/hooks/products/useUpdateProduct";
 import uploadImageToStore from "@/utils/uploadImageToStore";
 import { deleteImageFromStore } from "@/utils/deleteImageFromStorage";
 import { useUpdateProductStatus } from "@/hooks/products/useUpdateProductStatus";
-
-type ProductStatus = "draft" | "active" | "deleted";
+import type { ProductStatus } from "@/types/product.type";
+import getStatusBadgeVariant from "@/utils/getStatusBadgeVariant";
+import getStatusIcon from "@/utils/getStatusIcon";
 
 function Product() {
   const { product, isFetching, error } = useProduct();
@@ -149,7 +149,6 @@ function Product() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
           <div className="flex items-center space-x-3">
@@ -176,11 +175,9 @@ function Product() {
         )}
       </div>
 
-      {/* Main Card */}
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Image */}
             <div className="space-y-4">
               {isEditing ? (
                 <div className="space-y-3">
@@ -277,7 +274,6 @@ function Product() {
                 )}
               </div>
 
-              {/* Description */}
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 {isEditing ? (
@@ -296,7 +292,6 @@ function Product() {
                 )}
               </div>
 
-              {/* Edit Actions */}
               {isEditing && (
                 <div className="flex space-x-2 pt-4">
                   <Button
@@ -326,7 +321,6 @@ function Product() {
         </CardContent>
       </Card>
 
-      {/* Status Management */}
       {statusTransitions.length > 0 && (
         <Card>
           <CardHeader>
@@ -394,32 +388,6 @@ function DateItem({ label, date }: { label: string; date: string }) {
     </div>
   );
 }
-
-const getStatusBadgeVariant = (status: ProductStatus) => {
-  switch (status) {
-    case "draft":
-      return "secondary";
-    case "active":
-      return "default";
-    case "deleted":
-      return "destructive";
-    default:
-      return "secondary";
-  }
-};
-
-const getStatusIcon = (status: ProductStatus) => {
-  switch (status) {
-    case "draft":
-      return <FileText className="h-3 w-3" />;
-    case "active":
-      return <CheckCircle className="h-3 w-3" />;
-    case "deleted":
-      return <Trash2 className="h-3 w-3" />;
-    default:
-      return <FileText className="h-3 w-3" />;
-  }
-};
 
 const getAvailableStatusTransitions = (current: ProductStatus) => {
   switch (current) {
