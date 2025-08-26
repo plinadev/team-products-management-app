@@ -36,7 +36,6 @@ function Dashboard() {
 
   return (
     <div className="p-6 space-y-6 lg:w-[60%] w-[90%] flex flex-col justify-self-center">
-      {/* Team Invite Code */}
       <div className="rounded-xl p-4 flex items-center justify-between border-3 border-dashed border-amber-600">
         <div>
           <h2 className="text-2xl font-bold">TEAM INVITE CODE</h2>
@@ -50,7 +49,6 @@ function Dashboard() {
         </button>
       </div>
 
-      {/* Online Members */}
       <div>
         <h2 className="text-lg font-semibold mb-3">Online Team Members</h2>
         {onlineTeamMembers.length === 0 ? (

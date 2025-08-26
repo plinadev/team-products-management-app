@@ -23,7 +23,7 @@ function Team() {
   }
 
   return (
-    <div className="p-6 g:w-[60%] w-[90%] flex flex-col justify-self-center">
+    <div className="p-6 lg:w-[60%] w-[90%] flex flex-col justify-self-center">
       <h1 className="text-2xl font-semibold mb-4">
         {team.team.name}{" "}
         <span className="text-sm text-stone-500">
