@@ -1,69 +1,121 @@
-# React + TypeScript + Vite
+# Team Products Management App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A collaborative platform where users can **create or join a team** and manage their team’s products together.  
+The entire application is powered by **Supabase services** (Auth, Database, Edge Functions, Realtime, and Storage).  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features  
 
-## Expanding the ESLint configuration
+### 🔐 Authentication  
+- Email & Password with **account verification**  
+- **Google Auth**  
+- Forgot password support  
+- On first login, users can:  
+  - **Create a new team** (with a unique invite code generated automatically)  
+  - OR **join an existing team** using an invite code  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 👥 Team Management  
+- Each user belongs to **one team only**  
+- Teams can be created instantly, or joined via invite code  
+- Users interact only within their own team  
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 📦 Product Management  
+- Full **CRUD operations** on products within a team  
+- Product structure:  
+  - Title  
+  - Description  
+  - Image  
+  - Status (`Draft` | `Active` | `Deleted`)  
+- Rules:  
+  - Products can be edited only while in **Draft** status  
+  - Deleting a product → sets status to **Deleted** (not permanently removed)  
+  - **Cron task** deletes “Deleted” products older than 2 weeks  
+- Enhanced features:  
+  - Table display with **pagination**  
+  - **Filters**: status, creation/update date, creator  
+  - **Full-text search** by title & description  
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 🟢 Realtime Presence  
+- Display which team members are **online/offline** in real time (via Supabase Realtime)  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🛠 Supabase Integration  
+- Supabase **Auth** for authentication  
+- Supabase **UI** for auth components  
+- Supabase **Database** with Row-Level Security (RLS)  
+- Supabase **Storage** for product images  
+- Supabase **Edge Functions** for backend logic (with shared utils folder)  
+- Supabase **Realtime** for online/offline status  
+- Supabase **Migrations** for schema management  
+- Local development supported with **Supabase containers**  
+
+---
+
+## 🏗️ Tech Stack  
+
+**Frontend**  
+- [React 19](https://react.dev/)  
+- [React Router v7](https://reactrouter.com/)  
+- [Zustand](https://zustand-demo.pmnd.rs/) – state management  
+- [TailwindCSS v4](https://tailwindcss.com/) + [DaisyUI](https://daisyui.com/)  
+- [Lucide Icons](https://lucide.dev/)  
+- [TanStack Query](https://tanstack.com/query/latest) for server state caching  
+- [Axios](https://axios-http.com/)  
+- [Shadcn UI](https://ui.shadcn.com/) components  
+
+**Backend (via Supabase Edge Functions)**  
+- [Supabase JS](https://supabase.com/docs/reference/javascript) as ORM  
+- [Supabase Auth](https://supabase.com/auth)  
+- [Supabase Database](https://supabase.com/database)  
+- [Supabase Storage](https://supabase.com/storage)  
+- [Supabase Realtime](https://supabase.com/realtime)  
+
+**Tooling**  
+- [Vite](https://vitejs.dev/) – build tool  
+- [TypeScript](https://www.typescriptlang.org/)  
+- [ESLint](https://eslint.org/)  
+
+---
+
+## ⚙️ Environment Variables  
+
+Create a `.env` file in the project root with:  
+
+```env
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Getting Started  
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository  
+```bash
+git clone https://github.com/plinadev/team-products-management-app.git
+cd team-products-management-app
 ```
+
+### 2. Install dependencies  
+```bash
+npm install
+```
+
+### 3. Setup Supabase  
+- Create a new project in [Supabase](https://supabase.com/)  
+- Copy the project’s **URL** and **Anon Key** → paste into `.env`  
+- Apply database schema using Supabase migrations  
+
+### 4. Run locally  
+```bash
+npm run dev
+```
+The app will be available at: **http://localhost:5173**  
+
+---
+
+## 📦 Deployment  
+
+- Check out depolyed application [here](https://team-products-management-app.vercel.app) 
+
+---
